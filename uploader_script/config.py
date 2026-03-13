@@ -13,14 +13,14 @@ API_KEY = os.getenv('API_KEY', 'API_KEY_HERE')
 CDN_URL_PREFIX = os.getenv('CDN_URL_PREFIX', 'http://127.0.0.1/')
 
 # Maximum allowed upload size (16 MB)
-MAX_CONTENT_LENGTH = os.getenv('MAX_CONTENT_LENGTH', 16 * 1024 * 1024)  # 16 MB
+MAX_CONTENT_LENGTH = int(os.getenv('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))  # 16 MB
 
 # Maximum dimension (largest side in pixels) to resize images to.
 # JPEGs and converted images will be resized so the largest side is at most this value.
-RESIZE_MAX_DIMENSION = os.getenv('RESIZE_MAX_DIMENSION', 800)
+RESIZE_MAX_DIMENSION = int(os.getenv('RESIZE_MAX_DIMENSION', 800))
 
 # Length of the generated random filename (excluding extension)
-FILENAME_LENGTH = os.getenv('FILENAME_LENGTH', 10)
+FILENAME_LENGTH = int(os.getenv('FILENAME_LENGTH', 10))
 
 # JPEG quality for saved JPG files (1-100). Lower = smaller file size, more compression.
-JPEG_QUALITY = os.getenv('JPEG_QUALITY', 80)
+JPEG_QUALITY = int(os.getenv('JPEG_QUALITY', 80))
