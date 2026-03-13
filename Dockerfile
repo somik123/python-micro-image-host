@@ -24,7 +24,6 @@ ADD uploader_script /opt/uploader_script
 WORKDIR /opt/uploader_script
 
 RUN chmod +x /start.sh \
-    && chmod +x /opt/uploader_script/run.sh \
     && chmod +x /opt/uploader_script/setup.sh \
     && /opt/uploader_script/setup.sh \
     && chown -hR www-data:uploader /var/www/html \
