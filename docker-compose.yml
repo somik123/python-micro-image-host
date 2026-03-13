@@ -1,0 +1,30 @@
+volumes:
+  img_data: # For uploaded images
+      name: img_data
+
+services:
+  app:
+    container_name: python-image-host
+    restart: unless-stopped
+    image: somik123/py-image-uploader
+    ports:
+      - 8192:80
+    volumes:
+      - img_data:/var/www/html
+    environment:
+      # Site base settings
+      UPLOAD_FOLDER: "/var/www/html"
+      ALLOWED_MIME_TYPES: "image/jpeg,image/png,image/gif,image/webp,image/avif"
+      # API key for authentication (change this to a strong key in production)
+      API_KEY: "dMDjPLQpCNbskPZaVE2vHuRQZkmEL7Ly"
+      # Site URL prefix (change this to your actual domain in production)
+      CDN_URL_PREFIX: "http://10.10.0.6:8192/"
+
+      # Max upload size (in bytes, e.g., 16 MB = 16777216 bytes)
+      MAX_CONTENT_LENGTH: 16777216
+      # Max dimension for resizing images (in pixels, e.g., 800 for max width/height)
+      RESIZE_MAX_DIMENSION: 800
+      # Length of random filename (excluding extension)
+      FILENAME_LENGTH: 10
+      # Quality for JPEG compression (0-100)
+      JPEG_QUALITY: 85

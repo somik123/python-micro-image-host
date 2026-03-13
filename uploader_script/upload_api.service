@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn for Flask Upload API
+After=network.target
+
+[Service]
+User=uploader
+Group=nginx
+WorkingDirectory=/opt/uploader_script
+ExecStart=/opt/uploader_script/venv/bin/gunicorn --bind 127.0.0.1:5000 upload_api:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
