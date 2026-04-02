@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="mb-4">Upload Image</h4>
+
+                <form id="uploadForm">
+                    <div class="mb-3">
+                        <label class="form-label">API Key</label>
+                        <input type="text" class="form-control" id="api_key" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Image</label>
+                        <input type="file" class="form-control" id="file" required>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="mb-3">
+                        <div class="progress d-none" id="progressContainer">
+                            <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%">0%</div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Upload</button>
+                </form>
+
+                <!-- Result -->
+                <div id="result" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("uploadForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const apiKey = document.getElementById("api_key").value;
+            const fileInput = document.getElementById("file").files[0];
+            const resultDiv = document.getElementById("result");
+
+            if (!fileInput) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">Please select a file</div>`;
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("api_key", apiKey);
+            formData.append("file", fileInput);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/upload", true);
+
+            const progressContainer = document.getElementById("progressContainer");
+            const progressBar = document.getElementById("progressBar");
+
+            progressContainer.classList.remove("d-none");
+
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    progressBar.style.width = percent + "%";
+                    progressBar.innerText = percent + "%";
+                }
+            };
+
+            xhr.onload = function () {
+                progressBar.style.width = "100%";
+                progressBar.innerText = "100%";
+
+                try {
+                    const response = JSON.parse(xhr.responseText);
+
+                    if (!response.success) {
+                        resultDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        ${response.error}
+                    </div>
+                `;
+                    } else {
+                        resultDiv.innerHTML = `
+                    <div class="alert alert-success">Upload successful!</div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="imageUrl" value="${response.url}" readonly>
+                        <button class="btn btn-outline-secondary" onclick="copyToClipboard()">Copy</button>
+                    </div>
+                `;
+                    }
+                } catch (err) {
+                    resultDiv.innerHTML = `
+                <div class="alert alert-danger">Invalid server response</div>
+            `;
+                }
+            };
+
+            xhr.onerror = function () {
+                resultDiv.innerHTML = `
+            <div class="alert alert-danger">Upload failed</div>
+        `;
+            };
+
+            xhr.send(formData);
+        });
+
+        function copyToClipboard() {
+            const input = document.getElementById("imageUrl");
+            input.select();
+            input.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+        }
+    </script>
+
+</body>
+
+</html>

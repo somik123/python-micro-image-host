@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     image: somik123/py-image-uploader
     ports:
-      - 8192:80
+      - 8080:80
     volumes:
       - img_data:/var/www/html
     environment:
@@ -18,7 +18,7 @@ services:
       # API key for authentication (change this to a strong key in production)
       API_KEY: "dMDjPLQpCNbskPZaVE2vHuRQZkmEL7Ly"
       # Site URL prefix (change this to your actual domain in production)
-      CDN_URL_PREFIX: "http://10.10.0.60:8192/"
+      CDN_URL_PREFIX: "http://image.cdn.example.com/"
 
       # Max upload size (in bytes, e.g., 16 MB = 16777216 bytes)
       MAX_CONTENT_LENGTH: 16777216

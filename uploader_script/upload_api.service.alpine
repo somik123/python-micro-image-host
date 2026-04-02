@@ -1,0 +1,16 @@
+#!/sbin/openrc-run
+description="Gunicorn Flask Upload API"
+
+# Command user/group
+command_user="uploader:nginx"
+
+# PID file
+pidfile="/var/www/cdn.imageperl.com/python/gunicorn_upload.pid"
+
+# Use supervise-daemon for auto-restart
+# supervised="true"
+supervisor="supervise-daemon"
+
+# Command: change directory first
+command="/var/www/cdn.imageperl.com/python/venv/bin/gunicorn"
+command_args="--chdir /var/www/cdn.imageperl.com/python --bind 127.0.0.1:5000 upload_api:app --access-logfile - --error-logfile -"
